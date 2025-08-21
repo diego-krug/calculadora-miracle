@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Treino – Planejador & Custo/Benefício</title>
+  
+  <!-- Estilos -->
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body>
+  <!-- ===== ESTRUTURA HTML ===== -->
+  <div class="wrap">
+    <!-- Cabeçalho -->
+    <header class="app-header">
+      <div class="header-brand">
+        <img src="assets/logo_3.png" alt="Miracle74" class="brand-logo">
+        <h1 class="app-title">
+          Calculadora de Treino
+        </h1>
+      </div>
+      <div class="header-subtitle">
+        Planejador de treino & análise de custo/benefício
+      </div>
+    </header>
+
+    <!-- Calculadora de Treino -->
+    <section class="card" style="margin-bottom: 14px">
+      <h2>Calculadora de Treino</h2>
+      
+      <div class="calculator-container">
+        <div class="input-section">
+          <div class="input-group">
+            <label>Horas desejadas (tempo real de treino)</label>
+            <input type="number" id="targetHours" step="0.1" min="0" value="68">
+          </div>
+          
+          <div class="input-group">
+            <label>Selecione o item para calcular</label>
+            <select id="itemSelector" class="btn">
+              <option value="">Escolha um item...</option>
+              <!-- Opções serão inseridas via JavaScript -->
+            </select>
+            
+            <!-- Custom Select com Imagens -->
+            <div class="custom-select-container">
+              <div class="custom-select" id="customSelect" tabindex="0">
+                <div class="selected-item" id="selectedItem">
+                  <span style="color: var(--muted);">Escolha um item...</span>
+                </div>
+                <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m6 9 6 6 6-6"/>
+                </svg>
+              </div>
+              <div class="custom-dropdown" id="customDropdown">
+                <!-- Opções serão inseridas via JavaScript -->
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="results-section" id="resultsSection" style="display: none;">
+          <div class="quantity-section">
+            <label>Quantidade necessária</label>
+            <div class="quantity-result" id="quantityResult">
+              <!-- Resultados serão inseridos aqui -->
+            </div>
+          </div>
+          
+          <div class="cheapest-section">
+            <label>Mais econômica</label>
+            <div class="best-choice" id="kpiCheapest">
+              <!-- Resultado mais econômico será inserido aqui -->
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="hint" style="margin-top: 12px">
+        <b>💡 Como funciona:</b> Digite o tempo real que você vai treinar (ex: 68h). O sistema calcula quantas unidades você precisa de cada item, considerando que cada arma tem seu próprio bônus de velocidade. A quantidade é sempre arredondada para cima.
+        <br><br>
+        <b>⚠️ Observação:</b> O cálculo para <b>escudos</b> ainda não está 100% preciso, pois varia dependendo da quantidade de criaturas que estão lhe atacando e os hits de fumaça e spark.
+      </div>
+    </section>
+
+    <!-- Custo x Benefício -->
+    <section class="card" style="margin-bottom: 14px">
+      <div class="row" style="margin-bottom: 8px">
+        <h2 style="margin: 0">Calculadora de custo × benefício</h2>
+        <div class="right row">
+          <input type="text" id="search" placeholder="Filtrar por nome..." />
+          <select id="sortBy" class="btn">
+            <option value="costPerHour">Ordenar: Custo por hora</option>
+            <option value="minutesEffPerUnit">Ordenar: Minutos efetivos</option>
+            <option value="charges">Ordenar: Cargas</option>
+            <option value="name" selected>Ordenar: Nome</option>
+          </select>
+          <select id="sortDir" class="btn">
+            <option value="asc">Asc</option>
+            <option value="desc" selected>Desc</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="cards-container" id="weaponsCards">
+        <!-- Cards serão inseridos via JavaScript -->
+      </div>
+    </section>
+
+    <!-- Seção de Doação -->
+    <section class="card donation-section">
+      <div class="donation-content">
+        <div class="donation-text">
+          <h3>❤️ Gostou da ferramenta?</h3>
+          <p>Se esta calculadora te ajudou, considere me pagar um café! ☕</p>
+          <p class="donation-subtitle">Sua doação ajuda a manter e melhorar ferramentas como esta.</p>
+        </div>
+        <div class="donation-button-container">
+          <a href="https://livepix.gg/krug" target="_blank" rel="noopener noreferrer" class="donation-button">
+            <span class="coffee-icon">☕</span>
+            <span class="button-text">Me pague um café</span>
+            <span class="heart-icon">❤️</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Botão de Toggle do Tema -->
+  <button class="theme-toggle" id="themeToggle" title="Alternar tema">
+    🌙
+  </button>
+
+  <!-- Scripts -->
+  <script src="js/theme.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/calculator.js"></script>
+  <script src="js/ui.js"></script>
+  <!-- <script src="js/main.js"></script> -->
+  
+  <!-- Script de teste inline para debug -->
+  <script>
+    // Aguarda todos os scripts carregarem
+    window.addEventListener('load', () => {
+      console.log('🎯 Verificando carregamento dos scripts...');
+      
+      // Verifica se os dados estão carregados
+      if (typeof WEAPONS_DATA !== 'undefined') {
+        console.log('✅ WEAPONS_DATA carregado:', WEAPONS_DATA.length, 'itens');
+        
+        // Inicializa o tema se disponível
+        if (typeof initializeTheme === 'function') {
+          try {
+            initializeTheme();
+            console.log('🎨 Sistema de tema inicializado');
+          } catch (error) {
+            console.error('❌ Erro ao inicializar tema:', error);
+          }
+        }
+        
+        // Tenta inicializar manualmente se necessário
+        if (typeof initializeUI === 'function') {
+          try {
+            initializeUI();
+            console.log('🎉 Aplicação inicializada com sucesso!');
+          } catch (error) {
+            console.error('❌ Erro ao inicializar:', error);
+          }
+        } else {
+          console.error('❌ Função initializeUI não encontrada');
+        }
+      } else {
+        console.error('❌ WEAPONS_DATA não carregado');
+      }
+    });
+  </script>
+</body>
+</html>
