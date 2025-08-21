@@ -18,8 +18,7 @@ const elements = {
   sortBy: null,
   sortDir: null,
   
-  // KPIs
-  kpiCheapest: null,
+
   
   // Calculadora de quantidade
   itemSelector: null,
@@ -37,7 +36,7 @@ function initializeElements() {
   elements.sortBy = document.getElementById('sortBy');
   elements.sortDir = document.getElementById('sortDir');
   
-  elements.kpiCheapest = document.getElementById('kpiCheapest');
+
   
   // Calculadora de quantidade
   elements.itemSelector = document.getElementById('itemSelector');
@@ -1147,8 +1146,7 @@ function calculateQuantity() {
     resultsSection.style.display = 'flex';
   }
   
-  // Atualiza o KPI mais econômico
-  updateCheapestKPI(tierResults[0], weaponType);
+
   
   // Aplica preços predefinidos para o tipo de arma selecionado
   const selectedWeaponType = extractWeaponType(selectedItem);
@@ -1172,63 +1170,7 @@ function updateMainKPIs(kpis) {
   // KPIs agora são fixos no HTML, não precisam ser atualizados
 }
 
-/**
- * Atualiza os KPIs finais na interface
- * @param {Object} finalKPIs - Objeto com os KPIs finais
- */
-function updateFinalKPIs(finalKPIs) {
-  // Item mais barato
-  if (finalKPIs.cheapest) {
-    const weaponName = finalKPIs.cheapest.name;
-    const costPerHour = formatNumber(finalKPIs.cheapest.costPerHour, 0);
-    
-    // Verifica se é um item Melee
-    if (weaponName.includes('Melee')) {
-      const tier = weaponName.split(' ')[0]; // Lightning, Spark, Inferno
-      
-      elements.kpiCheapest.innerHTML = `
-        <div class="kpi-content">
-          <div class="kpi-image-container">
-            <img class="kpi-image melee-image" src="assets/${tier.toLowerCase()}_axe.gif" alt="Axe" 
-                 onerror="this.style.display='none'">
-            <img class="kpi-image melee-image" src="assets/${tier.toLowerCase()}_club.gif" alt="Club" 
-                 onerror="this.style.display='none'">
-            <img class="kpi-image melee-image" src="assets/${tier.toLowerCase()}_sword.gif" alt="Sword" 
-                 onerror="this.style.display='none'">
-          </div>
-          <div class="kpi-text">
-            <div class="kpi-name">${weaponName}</div>
-            <div class="kpi-cost">${costPerHour} gold/h</div>
-          </div>
-        </div>
-      `;
-      
-      // Inicia animação para o KPI
-      startMeleeAnimationForKPI();
-    } else {
-      // Para itens normais, mostra apenas a imagem
-      const imageName = weaponName.replace(' Training ', '_').toLowerCase() + '.gif';
-      
-      elements.kpiCheapest.innerHTML = `
-        <div class="kpi-content">
-          <div class="kpi-image-container">
-            <img class="kpi-image" src="assets/${imageName}" alt="${weaponName}" 
-                 onerror="this.style.display='none'">
-          </div>
-          <div class="kpi-text">
-            <div class="kpi-name">${weaponName}</div>
-            <div class="kpi-cost">${costPerHour} gold/h</div>
-          </div>
-        </div>
-      `;
-    }
-    
-    elements.kpiCheapest.classList.add('has-result');
-  } else {
-    elements.kpiCheapest.innerHTML = '<span class="muted">–</span>';
-    elements.kpiCheapest.classList.remove('has-result');
-  }
-}
+
 
 // ===== GESTÃO DE PREÇOS =====
 
@@ -1472,32 +1414,8 @@ function calculateAllRows() {
   
 
   
-  updateFinalKPIs(finalKPIs);
 
   return rows;
 }
 
-/**
- * Atualiza o KPI mais econômico
- */
-function updateCheapestKPI(cheapestTier, weaponType) {
-  const cheapestResult = document.getElementById('kpiCheapest');
-  if (!cheapestResult) return;
-  
-  const weaponTypeLower = cheapestTier.tier.toLowerCase();
-  const weaponTypeLower2 = weaponType.toLowerCase();
-  
-  cheapestResult.innerHTML = `
-    <div class="cheapest-kpi">
-      <div class="cheapest-image">
-        <img src="assets/${weaponTypeLower}_${weaponTypeLower2}.gif" 
-             alt="${cheapestTier.tier} ${weaponType}" 
-             onerror="this.style.display='none'">
-      </div>
-      <div class="cheapest-details">
-        <div class="cheapest-name">${cheapestTier.tier} Training ${weaponType}</div>
-        <div class="cheapest-cost">${cheapestTier.totalCost.toLocaleString()} gold</div>
-      </div>
-    </div>
-  `;
-}
+

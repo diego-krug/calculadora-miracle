@@ -235,15 +235,13 @@ body {
   gap: 20px;
 }
 
-.quantity-section,
-.cheapest-section {
+.quantity-section {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.quantity-section label,
-.cheapest-section label {
+.quantity-section label {
   margin-bottom: 8px;
   font-weight: 500;
   color: var(--ink);
@@ -1073,11 +1071,7 @@ select option {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.tier-card.tier-cheapest {
-  border-color: var(--accent);
-  background: linear-gradient(135deg, var(--accent-light) 0%, var(--card) 100%);
-  box-shadow: 0 4px 16px rgba(var(--accent-rgb), 0.3);
-}
+
 
 .tier-header {
   display: flex;
@@ -1129,10 +1123,7 @@ select option {
   color: var(--ink);
 }
 
-.tier-total.cheapest {
-  color: var(--accent);
-  font-size: 18px;
-}
+
 
 .tier-training-time {
   font-size: 13px;
@@ -1140,50 +1131,7 @@ select option {
   font-style: italic;
 }
 
-/* ===== KPI MAIS ECONÔMICO ===== */
 
-.cheapest-kpi {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px;
-  background: var(--card);
-  border: 2px solid var(--accent);
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--accent-light) 0%, var(--card) 100%);
-}
-
-.cheapest-image {
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.cheapest-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.cheapest-details {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.cheapest-name {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.cheapest-cost {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--accent);
-}
 
 /* ===== SEÇÃO DE DOAÇÃO ===== */
 
