@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Treino – Planejador & Custo/Benefício</title>
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body>
+  <!-- ===== ESTRUTURA HTML ===== -->
+  <div class="wrap">
+    <!-- Cabeçalho -->
+    <header class="app-header">
+      <div class="header-brand">
+        <img src="assets/logo_3.png" alt="Miracle74" class="brand-logo">
+        <h1 class="app-title">
+          Calculadora de Treino
+        </h1>
+      </div>
+      <div class="header-subtitle">
+        Planejador de treino & análise de custo/benefício
+      </div>
+    </header>
+
+
+    <!-- Calculadora de Skills -->
+    <section class="card" style="margin-bottom: 14px">
+        <div class="skills-calculator-container">
+          <div class="skills-input-section">
+            <!-- Card de Vocações -->
+            <div class="skills-card">
+              <h3 class="skills-card-title">🎭 Vocações</h3>
+              <div class="vocation-radio-container">
+                <div class="vocation-radio-item">
+                  <input type="radio" id="vocationKnight" name="vocation" value="knight" class="vocation-radio">
+                  <label for="vocationKnight" class="vocation-radio-label">
+                    <img src="assets/knight.gif" alt="Knight" class="vocation-image">
+                    <span class="vocation-name">Knight</span>
+                  </label>
+                </div>
+                
+                <div class="vocation-radio-item">
+                  <input type="radio" id="vocationPaladin" name="vocation" value="paladin" class="vocation-radio">
+                  <label for="vocationPaladin" class="vocation-radio-label">
+                    <img src="assets/paladin.gif" alt="Paladin" class="vocation-image">
+                    <span class="vocation-name">Paladin</span>
+                  </label>
+                </div>
+                
+                <div class="vocation-radio-item">
+                  <input type="radio" id="vocationSorcerer" name="vocation" value="sorcerer" class="vocation-radio">
+                  <label for="vocationSorcerer" class="vocation-radio-label">
+                    <img src="assets/sorcerer.gif" alt="Sorcerer" class="vocation-image">
+                    <span class="vocation-name">Sorcerer</span>
+                  </label>
+                </div>
+                
+                <div class="vocation-radio-item">
+                  <input type="radio" id="vocationDruid" name="vocation" value="druid" class="vocation-radio">
+                  <label for="vocationDruid" class="vocation-radio-label">
+                    <img src="assets/druid.gif" alt="Druid" class="vocation-image">
+                    <span class="vocation-name">Druid</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+  
+            <!-- Card de Tipos de Skill -->
+            <div class="skills-card">
+              <h3 class="skills-card-title">⚔️ Tipos de Skill</h3>
+              <div class="skill-type-radio-container">
+                <div class="skill-type-radio-item">
+                  <input type="radio" id="skillTypeMelee" name="skillType" value="melee" class="skill-type-radio">
+                  <label for="skillTypeMelee" class="skill-type-radio-label">
+                    <img src="assets/spark_sword.gif" alt="Melee" class="skill-type-image">
+                    <div class="skill-type-text">
+                      <span class="skill-type-name">Melee</span>
+                      <span class="skill-type-desc">Axe/Club/Sword</span>
+                    </div>
+                  </label>
+                </div>
+                
+                <div class="skill-type-radio-item">
+                  <input type="radio" id="skillTypeMagic" name="skillType" value="magic" class="skill-type-radio">
+                  <label for="skillTypeMagic" class="skill-type-radio-label">
+                    <img src="assets/spark_wand.gif" alt="Magic Level" class="skill-type-image">
+                    <div class="skill-type-text">
+                      <span class="skill-type-name">Magic Level</span>
+                      <span class="skill-type-desc">ML</span>
+                    </div>
+                  </label>
+                </div>
+                
+                <div class="skill-type-radio-item">
+                  <input type="radio" id="skillTypeDistance" name="skillType" value="distance" class="skill-type-radio">
+                  <label for="skillTypeDistance" class="skill-type-radio-label">
+                    <img src="assets/spark_spear.gif" alt="Distance" class="skill-type-image">
+                    <div class="skill-type-text">
+                      <span class="skill-type-name">Distance</span>
+                      <span class="skill-type-desc">Bow/Arrow</span>
+                    </div>
+                  </label>
+                </div>
+                
+                <div class="skill-type-radio-item">
+                  <input type="radio" id="skillTypeShielding" name="skillType" value="shielding" class="skill-type-radio">
+                  <label for="skillTypeShielding" class="skill-type-radio-label">
+                    <img src="assets/spark_shield.gif" alt="Shielding" class="skill-type-image">
+                    <div class="skill-type-text">
+                      <span class="skill-type-name">Shielding (em breve)</span>
+                      <span class="skill-type-desc">Shield</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+  
+            <div class="skills-row">
+              <div class="skills-input-group">
+                <label>Skill Atual</label>
+                <input type="number" id="currentSkill" class="skills-input" placeholder="Ex: 40" min="0" step="0.1">
+              </div>
+  
+              <div class="skills-input-group">
+                <label>Skill Desejada</label>
+                <input type="number" id="targetSkill" class="skills-input" placeholder="Ex: 70" min="0" step="0.1">
+              </div>
+            </div>
+  
+            <div class="skills-calculate-btn-container">
+              <button id="calculateSkillsBtn" class="skills-calculate-btn">🧮 Calcular Skills</button>
+            </div>
+  
+  
+  
+                    <!-- Resultado Integrado: Skills + Treino -->
+          <div class="skills-results-section" id="skillsResultsSection" style="display: none;">
+            <div class="skills-result-card">
+              <h3>📊 Resultado do Cálculo de Skills</h3>
+              <div class="skills-stats-grid">
+                <div class="skills-stat-item">
+                  <div class="skills-stat-label">Skill Atual</div>
+                  <div class="skills-stat-value" id="displayCurrentSkill">-</div>
+                </div>
+                <div class="skills-stat-item">
+                  <div class="skills-stat-label">Skill Desejada</div>
+                  <div class="skills-stat-value" id="displayTargetSkill">-</div>
+                </div>
+                <div class="skills-stat-item">
+                  <div class="skills-stat-label">Diferença</div>
+                  <div class="skills-stat-value" id="displaySkillDifference">-</div>
+                </div>
+              </div>
+
+              <div class="skills-training-info">
+                <div class="skills-info-item">
+                  <span class="skills-info-label">⏱️ Tempo estimado:</span>
+                  <span class="skills-info-value" id="displayTrainingTime">-</span>
+                </div>
+              </div>
+              
+              <!-- Input hidden para o tempo calculado das skills -->
+              <input type="hidden" id="targetHours" value="0">
+              
+              <!-- Informações de Treino Integradas -->
+              <div class="training-info-integrated" id="trainingInfoIntegrated" style="display: none;">
+                <div class="training-info-header">
+                  <h4>⚔️ Informações de Treino</h4>
+                  <div class="skill-type-badge-integrated" id="skillTypeBadgeIntegrated">-</div>
+                </div>
+                
+                <div class="training-details-grid">
+                  <div class="training-detail-item">
+                    <span class="detail-label">⏰ Tempo por Tier:</span>
+                    <div class="tier-time-breakdown" id="tierTimeBreakdownDisplay">-</div>
+                  </div>
+                  <div class="training-detail-item">
+                    <span class="detail-label">📦 Quantidade por Tier:</span>
+                    <div class="tier-breakdown" id="tierBreakdownDisplay">-</div>
+                  </div>
+                  <div class="training-detail-item">
+                    <span class="detail-label">💰 Custo por Tier:</span>
+                    <div class="tier-cost-breakdown" id="tierCostBreakdownDisplay">-</div>
+                  </div>
+                </div>
+                
+                <!-- Hint para o usuário -->
+                <div class="training-hint">
+                  <div class="hint-icon">💡</div>
+                  <div class="hint-content">
+                    <strong>Dica:</strong> Desça até a calculadora de custo × benefício para personalizar os preços de cada arma e ver custos personalizados!
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+      </section>
+
+    <!-- Custo x Benefício -->
+    <section class="card" style="margin-bottom: 14px">
+      <div class="row" style="margin-bottom: 8px">
+        <h2 style="margin: 0">Calculadora de custo × benefício</h2>
+        <div class="right row">
+          <input type="text" id="search" placeholder="Filtrar por nome..." />
+          <select id="sortBy" class="btn">
+            <option value="costPerHour">Ordenar: Custo por hora</option>
+            <option value="minutesEffPerUnit">Ordenar: Minutos efetivos</option>
+            <option value="charges">Ordenar: Cargas</option>
+            <option value="name" selected>Ordenar: Nome</option>
+          </select>
+          <select id="sortDir" class="btn">
+            <option value="asc">Asc</option>
+            <option value="desc" selected>Desc</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="cards-container" id="weaponsCards">
+        <!-- Cards serão inseridos via JavaScript -->
+      </div>
+    </section>
+
+    <!-- Seção de Doação -->
+    <section class="card donation-section">
+      <div class="donation-content">
+        <div class="donation-text">
+          <h3>❤️ Gostou da ferramenta?</h3>
+          <p>Se esta calculadora te ajudou, considere me pagar um café! ☕</p>
+          <p class="donation-subtitle">Sua doação ajuda a manter e melhorar ferramentas como esta.</p>
+        </div>
+        <div class="donation-button-container">
+          <a href="https://livepix.gg/krug" target="_blank" rel="noopener noreferrer" class="donation-button">
+            <span class="coffee-icon">☕</span>
+            <span class="button-text">Me pague um café</span>
+            <span class="heart-icon">❤️</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Botão de Toggle do Tema -->
+  <button class="theme-toggle" id="themeToggle" title="Alternar tema">
+    🌙
+  </button>
+
+  <!-- Scripts -->
+  <script src="js/theme.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/calculator.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/skills-calculator.js"></script>
+  <!-- <script src="js/main.js"></script> -->
+
+  <!-- Script de teste inline para debug -->
+  <script>
+    // Aguarda todos os scripts carregarem
+    window.addEventListener('load', () => {
+      console.log('🎯 Verificando carregamento dos scripts...');
+
+      // Verifica se os dados estão carregados
+      if (typeof WEAPONS_DATA !== 'undefined') {
+        console.log('✅ WEAPONS_DATA carregado:', WEAPONS_DATA.length, 'itens');
+
+        // Inicializa o tema se disponível
+        if (typeof initializeTheme === 'function') {
+          try {
+            initializeTheme();
+            console.log('🎨 Sistema de tema inicializado');
+          } catch (error) {
+            console.error('❌ Erro ao inicializar tema:', error);
+          }
+        }
+
+        // Tenta inicializar manualmente se necessário
+        if (typeof initializeUI === 'function') {
+          try {
+            initializeUI();
+            console.log('🎉 Aplicação inicializada com sucesso!');
+          } catch (error) {
+            console.error('❌ Erro ao inicializar:', error);
+          }
+        } else {
+          console.error('❌ Função initializeUI não encontrada');
+        }
+      } else {
+        console.error('❌ WEAPONS_DATA não carregado');
+      }
+    });
+  </script>
+</body>
+
+</html>
