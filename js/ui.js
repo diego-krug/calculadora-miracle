@@ -40,7 +40,6 @@ function initializeElements() {
   
   // Calculadora de quantidade
   elements.itemSelector = document.getElementById('itemSelector');
-  elements.quantityResult = document.getElementById('quantityResult');
   
   // Custom select com imagens
   elements.customSelect = document.getElementById('customSelect');
@@ -364,8 +363,14 @@ function createCardPriceSection(rowData) {
  * Popula o selector de itens com as opções disponíveis
  */
 function populateItemSelector() {
-  if (!elements.itemSelector || !elements.customDropdown) {
-    console.error('❌ elementos do selector não encontrados');
+  // Verifica se os elementos existem antes de tentar acessá-los
+  if (!elements.itemSelector) {
+    console.log('ℹ️ ItemSelector não encontrado - interface integrada');
+    return;
+  }
+  
+  if (!elements.customDropdown) {
+    console.log('ℹ️ CustomDropdown não encontrado - interface integrada');
     return;
   }
   
@@ -548,11 +553,7 @@ function resetSelection() {
   // Fecha o dropdown
   closeCustomDropdown();
   
-  // Limpa a área de resultados
-  if (elements.quantityResult) {
-    elements.quantityResult.innerHTML = '<span class="muted">Digite as horas e selecione um item</span>';
-    elements.quantityResult.classList.remove('has-result');
-  }
+  // Limpa a área de resultados (não mais necessário na interface integrada)
   
   // Esconde a seção de resultados
   const resultsSection = document.getElementById('resultsSection');
@@ -956,25 +957,56 @@ function getItemBonusPct(itemName) {
  * Calcula a quantidade necessária para o item selecionado
  */
 function calculateQuantity() {
-  if (!elements.itemSelector || !elements.quantityResult) return;
+  console.log('🚀 calculateQuantity iniciada');
   
-  const selectedItem = elements.itemSelector.value;
+  console.log('ℹ️ Interface integrada - calculando quantidade...');
+  
+  const selectedItem = elements.itemSelector?.value || 'training_melee';
   const realHours = parseFloat(elements.targetHours.value || 0);
   
-  if (!selectedItem || realHours <= 0) {
-    elements.quantityResult.innerHTML = '<span class="muted">Digite as horas e selecione um item</span>';
-    elements.quantityResult.classList.remove('has-result');
+  console.log('📊 Parâmetros:', { selectedItem, realHours });
+  
+  if (realHours <= 0) {
+    console.log('⚠️ Horas <= 0, saindo da função');
     return;
   }
   
-  // Obtém dados do item selecionado dos atributos da opção
-  const selectedOption = elements.itemSelector.options[elements.itemSelector.selectedIndex];
-  const weaponType = selectedOption.getAttribute('data-weapon-type') || '';
-  const itemType = selectedOption.getAttribute('data-type') || 'arma';
+  // Obtém dados do item selecionado ou usa o tipo padrão baseado no skill
+  let weaponType, itemType;
+  
+  console.log('🔍 Determinando tipo de arma...');
+  
+  if (elements.itemSelector && elements.itemSelector.options.length > 0) {
+    const selectedOption = elements.itemSelector.options[elements.itemSelector.selectedIndex];
+    weaponType = selectedOption.getAttribute('data-weapon-type') || '';
+    itemType = selectedOption.getAttribute('data-type') || 'arma';
+    console.log('📋 Usando itemSelector:', { weaponType, itemType });
+  } else {
+    // Fallback para quando não há itemSelector (interface integrada)
+    // Usa a função do skills-calculator para obter o tipo de skill
+    console.log('🔄 Usando fallback para interface integrada');
+    if (typeof getSelectedSkillType === 'function') {
+      const skillType = getSelectedSkillType();
+      console.log('🎯 Skill type selecionado:', skillType);
+      const skillToWeaponMap = {
+        'melee': 'Melee',
+        'magic': 'Wand',
+        'distance': 'Spear',
+        'shielding': 'Shield'
+      };
+      weaponType = skillToWeaponMap[skillType] || 'Melee';
+      console.log('⚔️ Weapon type mapeado:', weaponType);
+    } else {
+      weaponType = 'Melee'; // Padrão
+      console.log('⚔️ Weapon type padrão:', weaponType);
+    }
+    itemType = 'arma';
+  }
+  
+  console.log('🎯 Tipo de arma final:', weaponType);
   
   if (!weaponType) {
-    elements.quantityResult.innerHTML = '<span class="muted">Dados do item não encontrados</span>';
-    elements.quantityResult.classList.remove('has-result');
+    console.error('❌ Tipo de arma não definido');
     return;
   }
   
@@ -986,28 +1018,11 @@ function calculateQuantity() {
     charges = 10800; // Valor médio para outros tipos
   }
   
-  // Calcula a quantidade necessária baseado no tempo real COM BÔNUS
-  // Para armas: usa o tempo efetivo (com bônus de velocidade)
-  // Para escudos: usa o tempo base (sem bônus)
+  // Para interface integrada, vamos calcular por tier individual
+  // Não precisamos calcular uma quantidade média
   
-  let effectiveHoursPerUnit;
-  if (itemType === 'arma') {
-    // Armas: calcula tempo efetivo com bônus individual
-    // Inferno Training Melee tem bônus de -20% (intervalo = 2s × 0.8 = 1.6s)
-    const bonusPct = getItemBonusPct(selectedItem);
-    const effectiveInterval = 2 * (1 + bonusPct / 100); // 2s × (1 + (-20)/100) = 1.6s
-    effectiveHoursPerUnit = (charges * effectiveInterval) / 3600;
-  } else {
-    // Escudos: usa tempo base (sem bônus de velocidade)
-    effectiveHoursPerUnit = (charges * 2) / 3600;
-  }
-  
-  const unitsNeeded = realHours / effectiveHoursPerUnit;
-  const roundedUnits = Math.ceil(unitsNeeded); // Sempre arredonda para cima
-  
-  // Formata o resultado com imagem
-  const resultText = `${roundedUnits} unidade${roundedUnits > 1 ? 's' : ''}`;
-  const detailText = `${formatMinutes(effectiveHoursPerUnit * 60)} por unidade`;
+  // Para interface integrada, não precisamos formatar resultado
+  const timeInfo = `Baseado em ${formatMinutes(realHours * 60)} de treino`;
   
     // Calcula quantidade para todos os tiers
   const tiers = ['Spark', 'Lightning', 'Inferno'];
@@ -1075,8 +1090,7 @@ function calculateQuantity() {
   
   // Verifica se encontrou algum tier
   if (tierResults.length === 0) {
-    elements.quantityResult.innerHTML = '<span class="muted">Dados dos tiers não encontrados</span>';
-    elements.quantityResult.classList.remove('has-result');
+    console.error('❌ Dados dos tiers não encontrados');
     return;
   }
   
@@ -1122,31 +1136,13 @@ function calculateQuantity() {
     `;
   });
   
-  elements.quantityResult.innerHTML = `
-    <div class="quantity-result-content">
-      <div class="tier-cards-container">
-        ${tierCardsHTML}
-      </div>
-    </div>
-  `;
+  // Interface integrada - não precisa atualizar quantityResult
   
-  // Inicia animação dos tiers para a quantidade
-  setTimeout(() => {
-    if (weaponType === 'Melee') {
-      startMeleeAnimationForTierCards();
-    } else {
-      startTierAnimation();
-    }
-  }, 100);
-  elements.quantityResult.classList.add('has-result');
+  console.log('📊 Resultado final:', { realHours, weaponType });
   
-  // Mostra a seção de resultados
-  const resultsSection = document.getElementById('resultsSection');
-  if (resultsSection) {
-    resultsSection.style.display = 'flex';
-  }
-  
-
+  // Atualiza a interface integrada com as informações de treino
+  console.log('🔄 Chamando updateIntegratedTrainingInfo...');
+  updateIntegratedTrainingInfo(0, 0, realHours, weaponType);
   
   // Aplica preços predefinidos para o tipo de arma selecionado
   const selectedWeaponType = extractWeaponType(selectedItem);
@@ -1158,6 +1154,234 @@ function calculateQuantity() {
       renderCards();
     }, 100);
   }
+  
+  console.log('✅ calculateQuantity finalizada');
+}
+
+/**
+ * Atualiza a interface integrada com as informações de treino
+ */
+function updateIntegratedTrainingInfo(units, hoursPerUnit, totalHours, weaponType) {
+  console.log('🔧 updateIntegratedTrainingInfo chamada com:', { units, hoursPerUnit, totalHours, weaponType });
+  
+  const weaponsQuantityDisplay = document.getElementById('weaponsQuantityDisplay');
+  const totalCostDisplay = document.getElementById('totalCostDisplay');
+  
+  console.log('🔍 Elementos encontrados:', { 
+    weaponsQuantityDisplay: !!weaponsQuantityDisplay, 
+    totalCostDisplay: !!totalCostDisplay 
+  });
+  
+  // Atualiza o breakdown de tempo por tier
+  const tierTimeBreakdownDisplay = document.getElementById('tierTimeBreakdownDisplay');
+  console.log('🔍 Procurando tierTimeBreakdownDisplay:', !!tierTimeBreakdownDisplay);
+  
+  if (tierTimeBreakdownDisplay) {
+    // Calcula quantidade por tier usando a lógica da calculadora original
+    console.log('🔍 Chamando calculateTierQuantities com:', { totalHours, weaponType });
+    const tierQuantities = calculateTierQuantities(totalHours, weaponType);
+    console.log('📊 Resultado de calculateTierQuantities:', tierQuantities);
+    
+    let timeBreakdownHTML = '';
+    tierQuantities.forEach(tier => {
+      // Calcula o tempo necessário para este tier
+      // O tempo por tier deve ser proporcional ao tempo total, considerando a eficiência
+      const efficiencyMultiplier = 1 + (tier.bonus / 100); // -10% = 0.9, -15% = 0.85, -20% = 0.8
+      const timeForTier = totalHours * efficiencyMultiplier;
+      const intervalText = tier.bonus > 0 ? `+${tier.bonus}% interval` : `${tier.bonus}% interval`;
+      
+      // Usa a mesma formatação de tempo da calculadora de skills
+      const formattedTime = formatTrainingTime(timeForTier);
+      
+      timeBreakdownHTML += `
+        <div class="tier-time-breakdown-item">
+          <span class="tier-name">${tier.tier}:</span>
+          <span class="tier-time">${formattedTime} (${intervalText})</span>
+        </div>
+      `;
+    });
+    tierTimeBreakdownDisplay.innerHTML = timeBreakdownHTML;
+    console.log('✅ Time Breakdown HTML criado:', timeBreakdownHTML);
+  } else {
+    console.error('❌ tierTimeBreakdownDisplay não encontrado');
+  }
+  
+  // Atualiza o breakdown de quantidade por tier
+  const tierBreakdownDisplay = document.getElementById('tierBreakdownDisplay');
+  if (tierBreakdownDisplay) {
+    const tierQuantities = calculateTierQuantities(totalHours, weaponType);
+    
+    let breakdownHTML = '';
+    tierQuantities.forEach(tier => {
+      breakdownHTML += `
+        <div class="tier-breakdown-item">
+          <span class="tier-name">${tier.tier}:</span>
+          <span class="tier-quantity">${tier.units}</span>
+        </div>
+      `;
+    });
+    tierBreakdownDisplay.innerHTML = breakdownHTML;
+    console.log('✅ Quantity Breakdown HTML criado:', breakdownHTML);
+  }
+  
+  // Atualiza o breakdown de custo por tier
+  const tierCostBreakdownDisplay = document.getElementById('tierCostBreakdownDisplay');
+  if (tierCostBreakdownDisplay) {
+    const tierQuantities = calculateTierQuantities(totalHours, weaponType);
+    const defaultPrices = {
+      'Spark': 10000,
+      'Lightning': 17000,
+      'Inferno': 30000
+    };
+    
+    let costBreakdownHTML = '';
+    tierQuantities.forEach(tier => {
+      const userPrice = getItemPrice(`${tier.tier} Training ${weaponType}`) || defaultPrices[tier.tier];
+      const tierCost = tier.units * userPrice;
+      costBreakdownHTML += `
+        <div class="tier-cost-breakdown-item">
+          <span class="tier-name">${tier.tier}</span>
+          <span class="tier-cost">${tierCost.toLocaleString()}</span>
+        </div>
+      `;
+    });
+    tierCostBreakdownDisplay.innerHTML = costBreakdownHTML;
+  }
+}
+
+/**
+ * Calcula quantidade por tier usando a lógica da calculadora original
+ */
+function calculateTierQuantities(realHours, weaponType) {
+  console.log('🔧 calculateTierQuantities chamada com:', { realHours, weaponType });
+  
+  if (!realHours || !weaponType) {
+    console.error('❌ Parâmetros inválidos:', { realHours, weaponType });
+    return [];
+  }
+  
+  // Dados fixos de cada tipo de arma (igual à calculadora original)
+  const weaponData = {
+    'Rod': {
+      'Spark': { charges: 3600, bonus: -10 },
+      'Lightning': { charges: 5400, bonus: -15 },
+      'Inferno': { charges: 7200, bonus: -20 }
+    },
+    'Wand': {
+      'Spark': { charges: 3600, bonus: -10 },
+      'Lightning': { charges: 5400, bonus: -15 },
+      'Inferno': { charges: 7200, bonus: -20 }
+    },
+    'Melee': {
+      'Spark': { charges: 3600, bonus: -10 },
+      'Lightning': { charges: 7200, bonus: -15 },
+      'Inferno': { charges: 10800, bonus: -20 }
+    },
+    'Spear': {
+      'Spark': { charges: 3600, bonus: -10 },
+      'Lightning': { charges: 7200, bonus: -15 },
+      'Inferno': { charges: 10800, bonus: -20 }
+    },
+    'Shield': {
+      'Spark': { charges: 7200, bonus: 10 },
+      'Lightning': { charges: 14400, bonus: 15 },
+      'Inferno': { charges: 21600, bonus: 20 }
+    }
+  };
+  
+  const tiers = ['Spark', 'Lightning', 'Inferno'];
+  const tierResults = [];
+  
+  console.log('🔍 Procurando dados para weaponType:', weaponType);
+  console.log('🔍 WeaponData disponível:', Object.keys(weaponData));
+  
+  tiers.forEach(tier => {
+    const itemData = weaponData[weaponType]?.[tier];
+    console.log(`🔍 Tier ${tier}:`, itemData);
+    
+    if (itemData) {
+      const charges = itemData.charges;
+      const bonusPct = itemData.bonus;
+      
+      // Para armas: bônus NEGATIVO reduz intervalo (melhora velocidade)
+      // Para escudos: bônus POSITIVO aumenta intervalo (piora velocidade)
+      let effectiveInterval;
+      if (weaponType === 'Shield') {
+        effectiveInterval = 2 * (1 + bonusPct / 100); // Escudos: mais lento
+      } else {
+        // Para armas: bônus negativo REDUZ o intervalo (treina mais rápido)
+        // Ex: -10% = intervalo 90% do normal = 10% mais rápido
+        effectiveInterval = 2 * (1 + bonusPct / 100);
+      }
+      
+      const hoursPerUnit = (charges * effectiveInterval) / 3600;
+      const unitsNeeded = Math.ceil(realHours / hoursPerUnit);
+      
+      console.log(`📊 ${tier}: charges=${charges}, bonus=${bonusPct}%, interval=${effectiveInterval}s, hoursPerUnit=${hoursPerUnit.toFixed(2)}h, units=${unitsNeeded}`);
+      
+      tierResults.push({
+        tier,
+        units: unitsNeeded,
+        charges,
+        bonus: bonusPct,
+        hoursPerUnit: hoursPerUnit.toFixed(2)
+      });
+    }
+  });
+  
+  console.log('📊 Resultado final:', tierResults);
+  return tierResults;
+}
+
+/**
+ * Calcula custo total usando preços da calculadora de custo x benefício
+ */
+function calculateTotalCostWithTierPrices(realHours, weaponType) {
+  // Preços padrão (caso o usuário não tenha definido)
+  const defaultPrices = {
+    'Spark': 10000,
+    'Lightning': 17000,
+    'Inferno': 30000
+  };
+  
+  // Tenta obter preços definidos pelo usuário
+  const userPrices = {};
+  const tiers = ['Spark', 'Lightning', 'Inferno'];
+  
+  tiers.forEach(tier => {
+    const itemName = `${tier} Training ${weaponType}`;
+    const userPrice = getItemPrice(itemName);
+    userPrices[tier] = userPrice > 0 ? userPrice : defaultPrices[tier];
+  });
+  
+  console.log('💰 Preços utilizados:', userPrices);
+  
+  // Calcula quantidade por tier
+  const tierQuantities = calculateTierQuantities(realHours, weaponType);
+  
+  // Calcula custo total
+  let totalCost = 0;
+  tierQuantities.forEach(tier => {
+    const tierCost = tier.units * userPrices[tier.tier];
+    totalCost += tierCost;
+    console.log(`💎 ${tier.tier}: ${tier.units} × ${userPrices[tier.tier].toLocaleString()} = ${tierCost.toLocaleString()}`);
+  });
+  
+  return totalCost;
+}
+
+/**
+ * Obtém o custo estimado por unidade baseado no tipo de arma (mantido para compatibilidade)
+ */
+function getEstimatedCostPerUnit(weaponType) {
+  const costMap = {
+    'Melee': 5000,    // Axe/Club/Sword
+    'Wand': 8000,     // Magic weapons
+    'Spear': 6000,    // Distance weapons
+    'Shield': 3000    // Shield weapons
+  };
+  
+  return costMap[weaponType] || 5000;
 }
 
 // ===== ATUALIZAÇÃO DE KPIs =====
