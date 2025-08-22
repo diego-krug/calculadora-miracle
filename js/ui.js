@@ -1,14 +1,8 @@
-/**
- * ===== INTERFACE DO USUÁRIO =====
- * Arquivo responsável por toda a renderização,
- * manipulação do DOM e interações da interface
- */
-
-// ===== REFERÊNCIAS DOS ELEMENTOS DOM =====
-
-/**
- * Objeto com referências para todos os elementos DOM necessários
- */
+/** 
+ * ARQUIVO 2.0 UI.JS
+ * 21/08/2025
+ * 22:30
+*/
 const elements = {
   // Parâmetros de entrada (agora só targetHours)
   targetHours: null,
@@ -29,22 +23,26 @@ const elements = {
  * Inicializa as referências dos elementos DOM
  */
 function initializeElements() {
-  // Apenas targetHours é necessário agora
-  elements.targetHours = document.getElementById('targetHours');
-  
-  elements.search = document.getElementById('search');
-  elements.sortBy = document.getElementById('sortBy');
-  elements.sortDir = document.getElementById('sortDir');
-  
-
-  
-  // Calculadora de quantidade
-  elements.itemSelector = document.getElementById('itemSelector');
-  
-  // Custom select com imagens
-  elements.customSelect = document.getElementById('customSelect');
-  elements.selectedItem = document.getElementById('selectedItem');
-  elements.customDropdown = document.getElementById('customDropdown');
+  try {
+    // Apenas targetHours é necessário agora
+    elements.targetHours = document.getElementById('targetHours');
+    
+    elements.search = document.getElementById('search');
+    elements.sortBy = document.getElementById('sortBy');
+    elements.sortDir = document.getElementById('sortDir');
+    
+    // Calculadora de quantidade
+    elements.itemSelector = document.getElementById('itemSelector');
+    
+    // Custom select com imagens
+    elements.customSelect = document.getElementById('customSelect');
+    elements.selectedItem = document.getElementById('selectedItem');
+    elements.customDropdown = document.getElementById('customDropdown');
+    
+    console.log('✅ Elementos DOM inicializados com sucesso');
+  } catch (error) {
+    console.error('❌ Erro ao inicializar elementos DOM:', error);
+  }
 }
 
 // ===== UTILITÁRIOS DE IMAGEM =====
@@ -363,16 +361,17 @@ function createCardPriceSection(rowData) {
  * Popula o selector de itens com as opções disponíveis
  */
 function populateItemSelector() {
-  // Verifica se os elementos existem antes de tentar acessá-los
-  if (!elements.itemSelector) {
-    console.log('ℹ️ ItemSelector não encontrado - interface integrada');
-    return;
-  }
-  
-  if (!elements.customDropdown) {
-    console.log('ℹ️ CustomDropdown não encontrado - interface integrada');
-    return;
-  }
+  try {
+    // Verifica se os elementos existem antes de tentar acessá-los
+    if (!elements.itemSelector) {
+      console.log('ℹ️ ItemSelector não encontrado - interface integrada');
+      return;
+    }
+    
+    if (!elements.customDropdown) {
+      console.log('ℹ️ CustomDropdown não encontrado - interface integrada');
+      return;
+    }
   
   // Limpa as opções existentes
   elements.itemSelector.innerHTML = '<option value="">Escolha um item...</option>';
@@ -462,6 +461,11 @@ function populateItemSelector() {
   
   // Configura event listeners do custom select
   setupCustomSelectListeners();
+  
+  console.log('✅ Item selector populado com sucesso');
+  } catch (error) {
+    console.error('❌ Erro ao popular item selector:', error);
+  }
 }
 
 /**
@@ -1427,31 +1431,37 @@ function updateItemPrice(itemName, price) {
  * Configura os event listeners para todos os controles
  */
 function setupEventListeners() {
-  const controlIds = [
-    'targetHours', 'search', 'sortBy', 'sortDir'
-  ];
-  
-  controlIds.forEach(id => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.addEventListener('input', renderCards);
-      element.addEventListener('change', renderCards);
-    }
-  });
-  
-  // Event listener para targetHours também recalcula quantidade
-  if (elements.targetHours) {
-    elements.targetHours.addEventListener('input', () => {
-      renderCards();
-      if (elements.itemSelector && elements.itemSelector.value) {
-        calculateQuantity();
+  try {
+    const controlIds = [
+      'targetHours', 'search', 'sortBy', 'sortDir'
+    ];
+    
+    controlIds.forEach(id => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.addEventListener('input', renderCards);
+        element.addEventListener('change', renderCards);
       }
     });
-  }
-  
-  // Event listener para o selector de itens
-  if (elements.itemSelector) {
-    elements.itemSelector.addEventListener('change', calculateQuantity);
+    
+    // Event listener para targetHours também recalcula quantidade
+    if (elements.targetHours) {
+      elements.targetHours.addEventListener('input', () => {
+        renderCards();
+        if (elements.itemSelector && elements.itemSelector.value) {
+          calculateQuantity();
+        }
+      });
+    }
+    
+    // Event listener para o selector de itens
+    if (elements.itemSelector) {
+      elements.itemSelector.addEventListener('change', calculateQuantity);
+    }
+    
+    console.log('✅ Event listeners configurados com sucesso');
+  } catch (error) {
+    console.error('❌ Erro ao configurar event listeners:', error);
   }
 }
 
@@ -1461,8 +1471,13 @@ function setupEventListeners() {
  * Aplica os valores padrão aos campos da interface
  */
 function applyDefaultValues() {
-  // Apenas targetHours precisa de valor padrão
-  if (elements.targetHours) elements.targetHours.value = 68;
+  try {
+    // Apenas targetHours precisa de valor padrão
+    if (elements.targetHours) elements.targetHours.value = 68;
+    console.log('✅ Valores padrão aplicados com sucesso');
+  } catch (error) {
+    console.error('❌ Erro ao aplicar valores padrão:', error);
+  }
 }
 
 /**
