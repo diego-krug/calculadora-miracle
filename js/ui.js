@@ -337,7 +337,7 @@ function createCardPriceSection(rowData) {
   
   if (isFinite(rowData.costPerHour)) {
     const cost = rowData.costPerHour;
-    costDisplay.textContent = `💎 ${formatNumber(cost, 2)} gold/h`;
+    costDisplay.innerHTML = `<img src="assets/crystal_coin.gif" alt="Crystal Coin" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px;"> ${Math.ceil(cost).toLocaleString()} gold/h`;
     
     // Adiciona classes para cores baseadas no custo
     if (cost > 1000) {
@@ -346,7 +346,7 @@ function createCardPriceSection(rowData) {
       costDisplay.classList.add('cheap');
     }
   } else {
-    costDisplay.textContent = '💎 —';
+    costDisplay.innerHTML = '<img src="assets/crystal_coin.gif" alt="Crystal Coin" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px;"> —';
   }
   
   priceSection.appendChild(priceInput);
@@ -1547,7 +1547,7 @@ function updateCalculatedValues() {
       const costDisplay = card.querySelector('.card-cost');
       if (costDisplay && isFinite(rowData.costPerHour)) {
         const cost = rowData.costPerHour;
-        costDisplay.textContent = `💎 ${formatNumber(cost, 0)} gold/h`;
+        costDisplay.innerHTML = `<img src="assets/crystal_coin.gif" alt="Crystal Coin" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px;"> ${formatNumber(cost, 0)} gold/h`;
         
         // Atualiza classes de cor
         costDisplay.classList.remove('expensive', 'cheap');
