@@ -1,7 +1,7 @@
 /**
- * ===== LÓGICA DE CÁLCULOS =====
- * Arquivo responsável por todos os cálculos matemáticos,
- * fórmulas e lógica de negócio da calculadora
+ * ARQUIVO 2.0 CALCULATOR.JS
+ * 21/08/2025
+ * 22:30
  */
 
 // ===== CONSTANTES FIXAS =====

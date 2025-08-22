@@ -1,5 +1,9 @@
 /**
  * ===== ARQUIVO PRINCIPAL =====
+ * ARQUIVO 2.0 MAIN.JS
+ * 21/08/2025
+ * 22:30
+ * 
  * Arquivo responsável por coordenar todos os módulos,
  * inicializar a aplicação e gerenciar o ciclo de vida
  */

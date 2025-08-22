@@ -1,7 +1,8 @@
 /**
- * ===== GERENCIAMENTO DE TEMA =====
- * Arquivo responsável por gerenciar o sistema de tema claro/escuro
- * com detecção automática baseada nas preferências do navegador
+ * ARQUIVO 2.0 THEME.JS
+ * 21/08/2025
+ * 22:30
+ * 
  */
 
 // ===== CONSTANTES =====

@@ -1,5 +1,9 @@
 /**
  * ===== CONFIGURAÇÕES E DADOS =====
+ * ARQUIVO 2.0 CONFIG.JS
+ * 21/08/2025
+ * 22:30
+ * 
  * Arquivo responsável por armazenar todas as configurações,
  * dados dos itens e constantes da aplicação
  */
