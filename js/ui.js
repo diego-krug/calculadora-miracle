@@ -1469,20 +1469,27 @@ function applyDefaultValues() {
  * Inicializa a interface do usuário
  */
 function initializeUI() {
-  // Inicializa elementos DOM
-  initializeElements();
-  
-  // Configura event listeners
-  setupEventListeners();
-  
-  // Aplica valores padrão
-  applyDefaultValues();
-  
-  // Renderiza os cards iniciais
-  renderCards();
-  
-  // Popula o selector de itens
-  populateItemSelector();
+  try {
+    // Inicializa elementos DOM
+    initializeElements();
+    
+    // Configura event listeners
+    setupEventListeners();
+    
+    // Aplica valores padrão
+    applyDefaultValues();
+    
+    // Renderiza os cards iniciais
+    renderCards();
+    
+    // Popula o selector de itens
+    populateItemSelector();
+    
+    console.log('✅ UI inicializada com sucesso');
+  } catch (error) {
+    console.error('❌ Erro ao inicializar UI:', error);
+    // Continua a execução mesmo com erro
+  }
 }
 
 // ===== FUNÇÕES DE RENDERIZAÇÃO (DEFINIDAS APÓS INICIALIZAÇÃO) =====
@@ -1553,25 +1560,29 @@ function updateCalculatedValues() {
  * Renderiza todos os cards com os dados calculados
  */
 function renderCards() {
-  // Verifica se as funções necessárias estão disponíveis
-  if (typeof calculateAllRows !== 'function') {
-    console.error('Função calculateAllRows não está disponível');
-    return;
-  }
-  
-  // Calcula todos os dados das linhas
-  const rows = calculateAllRows();
-  
-  // Limpa os cards
-  const cardsContainer = document.getElementById('weaponsCards');
-  if (cardsContainer) {
-    cardsContainer.innerHTML = "";
+  try {
+    // Verifica se as funções necessárias estão disponíveis
+    if (typeof calculateAllRows !== 'function') {
+      console.error('Função calculateAllRows não está disponível');
+      return;
+    }
+    
+    // Calcula todos os dados das linhas
+    const rows = calculateAllRows();
+    
+    // Limpa os cards
+    const cardsContainer = document.getElementById('weaponsCards');
+    if (cardsContainer) {
+      cardsContainer.innerHTML = "";
     
     // Adiciona os cards
     rows.forEach(rowData => {
       const card = createWeaponCard(rowData);
       cardsContainer.appendChild(card);
     });
+    }
+  } catch (error) {
+    console.error('❌ Erro ao renderizar cards:', error);
   }
 }
 
@@ -1635,9 +1646,6 @@ function calculateAllRows() {
 
   // Atualiza KPIs finais
   const finalKPIs = calculateFinalKPIs(rows);
-  
-
-  
 
   return rows;
 }
